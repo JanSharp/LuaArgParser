@@ -93,6 +93,7 @@ local function parse(args, config, start_index)
     for j = 1, type_defs[type_id].arg_count do
       if not next_arg() then
         err = "Expected "..j.." arg(s) for the type '"..type_id.."' "..context.."."
+        return
       end
       type_args[j] = current
     end
@@ -115,6 +116,7 @@ local function parse(args, config, start_index)
       value_count = value_count + 1
       values[value_count] = consume_args_and_convert_for_type(type_id, context)
     end
+    if err then return values end
     if value_count < min then
       err = "Expected "..min..(max and (max ~= min and (" to "..max) or "") or " or more")
         .." parameters of the type '"..type_id.."', got "..value_count.." "..context.."."
